@@ -1,0 +1,172 @@
+---
+title: "Relación entre las características morfológicas de los lagartos"
+author: "Laura Miranda Redondo"
+date: "14/11/2026"
+format:
+  html:
+    toc: true
+    toc-title: "Contenido"
+    code-fold: true
+    code-summary: "Mostrar código"
+    number-sections: true
+    theme: cosmo
+---
+
+```{r}
+
+lagartos <- read.csv(
+  "C:/Users/LAURA MIRANDA/Documents/lagartos.csv",
+  header = TRUE,
+  stringsAsFactors = FALSE
+)
+
+head(lagartos)
+dim(lagartos)
+str(lagartos)
+```
+
+## Relación entre las caracteristícas morfológicas y ecológicas de los lagartos espinosos (*Sceloporus)*
+
+**Pregunta de investigación:**
+
+¿Existen diferencias en la masa corporal y la longitud hocico-cloaca de los lagartos del género *Sceloporus* según el sexo y el tipo de sustrato que utilizan?
+
+**Objetivo general:**
+
+Analizar la variación de las características morfológicas de los lagartos espinosos en función de variables cualitativas relacionadas con sus características biológicas y ecológicas.
+
+## 1. Introducción
+
+El género *Sceloporus* comprende un grupo diverso de lagartos que habitan diferentes ambientes de América del Norte. Estas especies presentan variaciones en sus características morfológicas y en el uso de los recursos disponibles en el hábitat. Estas diferencias pueden favorecer la coexistencia de especies relacionadas al permitir que ocupen distintos espacios ecológicos y utilicen diferentes recursos.
+
+Westeen et al. (2023), en su investigación *Phenotypic diversity facilitates niche partitioning in a sky island assemblage of spiny lizards*, analizaron la diversidad fenotípica y la partición de nichos ecológicos en un conjunto de lagartos espinosos de las montañas Chiricahua, Arizona, Estados Unidos. Entre los aspectos estudiados se encuentran las características morfológicas, el tipo de sustrato utilizado y la altura de percha de los individuos.
+
+El análisis de estas características permite explorar cómo se relacionan los atributos biológicos de los organismos con las condiciones de su entorno. Además, facilita la identificación de patrones de variación entre individuos y su posible asociación con el uso del hábitat.
+
+## 2. Métodos
+
+### 2.1. Origen y selección de los datos
+
+Para el desarrollo de esta investigación se utilizó una base de datos secundaria correspondiente al archivo westeen-2023-morphologyDataRaw.csv, importado como "lagartos" que contiene información morfológica y ecológica de lagartos. Los datos fueron obtenidos a partir del conjunto de datos asociado a la publicación de Westeen et al. (2023).
+
+La base de datos fue importada en el entorno de programación R mediante RStudio y posteriormente se seleccionaron las variables de interés para responder la pregunta de investigación, considerando únicamente los registros correspondientes al género *Sceloporus*, la fecha de descarga de los datos fue 11/11/2026.
+
+### 2.2. Variables utilizadas
+
+Se seleccionaron cuatro variables para evaluar las posibles diferencias morfológicas y su relación con el sexo y el tipo de sustrato utilizado por los individuos.
+
+**Sexo (sex):** variable categórica que identifica el sexo de los individuos.
+
+- **Sustrato (substrate):** variable categórica que representa el tipo de sustrato utilizado por los lagartos.
+
+- **Masa corporal (mass):** variable cuantitativa que representa la masa de los individuos.
+
+- **Longitud hocico-cloaca (SLV):** variable cuantitativa que corresponde a la distancia entre la punta
+
+  ```{r}
+
+
+  lagartos_seleccionados <- lagartos[, c(
+    "sex",
+    "substrate",
+    "mass",
+    "SVL"
+  )]
+  ```
+
+### 2.3. Procesamiento y limpieza de los datos
+
+La base de datos fue importada en RStudio mediante el paquete readr y posteriormente se realizó una inspección de su estructura, dimensiones, nombres de columnas y valores faltantes, con el propósito de verificar la consistencia de la información antes de los análisis.
+
+Se seleccionaron únicamente las cuatro variables de interés. Los registros con valores faltantes se conservaron inicialmente para los análisis descriptivos de las variables que sí presentaban información. Para las comparaciones que involucraron simultáneamente dos o más variables, se utilizaron únicamente las observaciones con datos completos en las variables correspondientes.
+
+Los individuos clasificados como juveniles se conservaron en la descripción general de la variable sexo, pero se excluyeron de las comparaciones entre machos y hembras. Los valores extremos no se eliminaron automáticamente, sino que se consideraron para su revisión antes de interpretar los resultados.
+
+### 2.4. Análisis estadístico y visualización
+
+Se realizó un análisis exploratorio de los datos mediante estadística descriptiva y visualización gráfica utilizando el paquete ggpplot2 del lenguaje de programación R.Se elaboraron diagramas de caja (*boxplots*) para explorar las diferencias en la masa corporal y la longitud hocico-cloaca entre machos y hembras. Adicionalmente se utilizó un gráfico de dispersión para examinar la relación entre la masa corporal y la longitud hocico-cloaca diferenciando los individuos según el sexo y el tipo de sustrato mediante paneles independientes.
+
+Estas representaciones gráficas permitieron explorar los patrones de variación morfológica entre los grupos estudiados y evaluar posibles asociaciones entre las características corporales, el sexo y el sustrato utilizado.
+
+## 3. Resultados
+
+En esta sección se presentan los resultados obtenidos a partir del análisis de las variables morfológicas de los lagartos. Se incluyen medidas de estadística descriptiva y representaciones gráficas que permiten describir los patrones de distribución de la masa corporal y la longitud hocico-cloaca (SVL), considerando el sexo y el tipo de sustrato.
+
+La Tabla 1 presenta el resumen estadístico de las variables morfológicas analizadas: masa corporal (mass) y longitud hocico-cloaca (SVL). Se incluyen el número de observaciones, la media, la desviación estándar y los valores mínimo y máximo de cada variable.
+
+```{r}
+tabla_final <- data.frame(
+  Variable = c("Mass", "SVL"),
+  Media = c(
+    mean(lagartos_seleccionados$mass, na.rm = TRUE),
+    mean(lagartos_seleccionados$SVL, na.rm = TRUE)
+  ),
+  Mediana = c(
+    median(lagartos_seleccionados$mass, na.rm = TRUE),
+    median(lagartos_seleccionados$SVL, na.rm = TRUE)
+  ),
+  Desviacion_Estandar = c(
+    sd(lagartos_seleccionados$mass, na.rm = TRUE),
+    sd(lagartos_seleccionados$SVL, na.rm = TRUE)
+  ),
+  Minimo = c(
+    min(lagartos_seleccionados$mass, na.rm = TRUE),
+    min(lagartos_seleccionados$SVL, na.rm = TRUE)
+  ),
+  Maximo = c(
+    max(lagartos_seleccionados$mass, na.rm = TRUE),
+    max(lagartos_seleccionados$SVL, na.rm = TRUE)
+  )
+)
+
+knitr::kable(
+  tabla_final,
+  caption = "Tabla 1. Estadística descriptiva de las variables morfológicas"
+)  
+
+```
+
+#### 1. Masa corporal según sexo
+
+```{r}
+library(ggplot2)
+ggplot(lagartos_seleccionados) + aes(x = sex, y = mass) +
+  geom_boxplot()
+ 
+```
+
+La Figura 1 presenta la distribución de la masa corporal (mass) de los individuos según su categoría sexual. Se muestran las medianas, la dispersión y los valores extremos de las observaciones.
+
+#### **2.** Distribución de la longitud hocico-cloaca (SVL).
+
+```{r}
+library(ggplot2)
+ggplot(lagartos_seleccionados) + aes(x = sex, y = SVL, fill = sex) + 
+  geom_boxplot()  
+```
+
+La Figura 2 muestra la distribución de la longitud hocico-cloaca (SVL) entre las categorías sexuales de los individuos. Se representan las medianas, la dispersión y los valores extremos registrados.
+
+#### 3. Relación entre masa y longitud hocico-cloaca
+
+```{r}
+library(ggplot2)
+ggplot(lagartos_seleccionados) + aes(x = SVL, y = mass, color = sex) +    
+  geom_point()
+```
+
+La Figura 3 representa la relación entre la longitud hocico-cloaca (SVL) y la masa corporal (mass) de los individuos. Cada punto corresponde a una observación y los colores permiten diferenciar las categorías sexuales.
+
+#### 4. Distribución de la masa corporal según el tipo de sustrato y el sexo.
+
+```{r}
+library(ggplot2)
+ggplot(lagartos_seleccionados) + aes(x = substrate, y = mass, fill = sex) +      geom_violin()
+```
+
+La Figura 4 representa la distribución de la masa corporal (mass) de los individuos según el tipo de sustrato (substrate). Los violines permiten visualizar la variación y concentración de los valores de masa corporal en cada categoría de sustrato, mientras que los colores diferencian las categorías sexuales (sex). Esta representación facilita la comparación de la distribución de la masa corporal entre machos y hembras en los diferentes tipos de sustrato.
+
+REFERENCIAS
+
+1.  Westeen, E., Martinez-Fonseca, J., Chen, C., & Wang, I. (2025). *Data from: Phenotypic diversity facilitates niche partitioning in a sky island assemblage of spiny lizards* \[Data set\]. Dryad. [https://doi.org/10.6078/D1WH9X](https://doi.org/10.6078/D1WH9X?utm_source=chatgpt.com)
+2.  R version 4.6.2 (2026-10-29 ucrt)
